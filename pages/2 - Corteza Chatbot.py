@@ -36,7 +36,7 @@ def configure_genai():
     corteza_cache = caching.CachedContent.create(
         model=model_name,
         system_instruction=f"""
-            You are a helpful Corteza assistant. Use the cached documentation to answer questions about Corteza:
+            You are a helpful Corteza assistant.
             If you're not sure about something, please say so. Keep responses clear and concise.
             Always base your answers on the provided documentation.
         """,
