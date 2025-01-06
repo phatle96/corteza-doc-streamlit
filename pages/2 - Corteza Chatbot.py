@@ -1,5 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
+from google.generativeai import caching
 import requests
 from PIL import Image
 import os
@@ -27,23 +28,28 @@ def load_documentation():
 
 # Configure Google Generative AI
 def configure_genai():
+    
+    docs = load_documentation()
+    model_name = "gemini-1.5-flash-001"
+    
     genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
-    model = genai.GenerativeModel('gemini-1.5-flash-001')
+    corteza_cache = caching.CachedContent.create(
+        model=model_name,
+        system_instruction=f"""
+            You are a helpful Corteza assistant. Use the cached documentation to answer questions about Corteza:
+            If you're not sure about something, please say so. Keep responses clear and concise.
+            Always base your answers on the provided documentation.
+        """,
+        contents=[docs],
+    )
+    model = genai.GenerativeModel.from_cached_content(cached_content=corteza_cache)
     return model
 
 # Function to generate response
-def get_ai_response(prompt, context, model):
-    # Construct the system prompt
-    system_prompt = f"""You are a helpful Corteza assistant. Use the following documentation to answer questions about Corteza:
-
-    {context}
-
-    If you're not sure about something, please say so. Keep responses clear and concise.
-    Always base your answers on the provided documentation.
-    """
+def get_ai_response(prompt, model):
     
     # Combine system prompt with user's question
-    full_prompt = f"{system_prompt}\n\nUser Question: {prompt}"
+    full_prompt = f"User Question: {prompt}"
     
     try:
         response = model.generate_content(full_prompt)
@@ -54,9 +60,6 @@ def get_ai_response(prompt, context, model):
 def main():
     st.title("🤖 Corteza Assistant")
     st.subheader("Ask me anything about Corteza!")
-
-    # Load the documentation
-    docs = load_documentation()
     
     # Set up the model
     try:
@@ -83,7 +86,7 @@ def main():
         # Generate AI response
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                response = get_ai_response(prompt, docs, model)
+                response = get_ai_response(prompt, model)
                 st.write(response)
                 
         # Add assistant response to chat history
