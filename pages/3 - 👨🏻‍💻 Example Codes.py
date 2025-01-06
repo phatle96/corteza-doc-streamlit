@@ -1,6 +1,10 @@
 import streamlit as st
 
-st.set_page_config(page_title="Common Corteza workflow tasks", layout="wide")
+st.set_page_config(
+  page_title="Common Corteza workflow tasks", 
+  page_icon="👨🏻‍💻",
+  layout="wide"
+)
 
 st.markdown("# Common Corteza workflow tasks")
 st.sidebar.markdown("# Common Corteza workflow tasks")

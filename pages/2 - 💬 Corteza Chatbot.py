@@ -13,6 +13,9 @@ st.set_page_config(
     layout="wide"
 )
 
+with st.sidebar:
+    GOOGLE_API_KEY = st.text_input("Please set Google API Key here:", key="chatbot_api_key", type="password")
+
 # Initialize session state for chat history if it doesn't exist
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -32,7 +35,7 @@ def configure_genai():
     docs = load_documentation()
     model_name = "gemini-1.5-flash-001"
     
-    genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+    genai.configure(api_key=GOOGLE_API_KEY)
     corteza_cache = caching.CachedContent.create(
         model=model_name,
         system_instruction=f"""
@@ -66,7 +69,7 @@ def main():
         model = configure_genai()
     except Exception as e:
         st.error(f"Error configuring Google Generative AI: {str(e)}")
-        st.info("Please make sure you have set the GOOGLE_API_KEY environment variable.")
+        st.info("Please make sure you have set the Google API Key on the sidebar.")
         return
 
     # Display chat messages

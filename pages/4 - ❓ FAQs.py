@@ -1,6 +1,10 @@
 import streamlit as st
 
-st.set_page_config(page_title="Frequently Asked Questions", layout="wide")
+st.set_page_config(
+    page_title="Frequently Asked Questions", 
+    page_icon="❓",
+    layout="wide"
+)
 
 st.markdown("# Frequently Asked Questions")
 st.sidebar.markdown("# Frequently Asked Questions")
