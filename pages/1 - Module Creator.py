@@ -16,7 +16,7 @@ def initialize_google_ai():
     Returns the configured model for text generation.
     """
     # genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
-    genai.configure(api_key='AIzaSyD6XIPE85JDIRJMfeN2SuGQtD5upUHyfCo')
+    genai.configure(api_key='GOOGLE_API_KEY')
     
     # Configure the model settings
     generation_config = {
@@ -28,7 +28,7 @@ def initialize_google_ai():
     
     # Initialize the model
     model = genai.GenerativeModel(
-        model_name='gemini-1.5-flash',
+        model_name='gemini-1.5-flash-001',
         generation_config=generation_config
     )
     
